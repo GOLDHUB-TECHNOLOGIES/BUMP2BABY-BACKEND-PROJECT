@@ -1,3 +1,4 @@
+import { registerValidation, loginValidation } from "../validation/authValidation.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -5,6 +6,9 @@ import jwt from "jsonwebtoken";
 // REGISTER USER
 export const registerUser = async (req, res) => {
   try {
+    const { error } = registerValidation(req.body); 
+    if (error) return res.status(400).json({ message: error.details[0].message });
+
     const { name, email, password } = req.body;
 
     // Check if user already exists
@@ -37,6 +41,9 @@ export const registerUser = async (req, res) => {
 // LOGIN USER
 export const loginUser = async (req, res) => {
   try {
+    const { error } = loginValidation(req.body);
+    if (error) return res.status(400).json({ message: error.details[0].message });
+
     const { email, password } = req.body;
 
     // Find user
