@@ -9,7 +9,12 @@ export const registerValidation = (data) => {
     name: Joi.string().min(3).required(),
     email: Joi.string().min(6).required().email(),
     password: Joi.string().min(6).required(),
-  });
+  })
+    // Allow clients to send either babyAge or babyage
+    .rename("babyAge", "babyage", { override: true, ignoreUndefined: true })
+    // Prevent failures if clients send extra keys; strip them from the value
+    .prefs({ abortEarly: false, allowUnknown: true, stripUnknown: true });
+
   return schema.validate(data);
 };
 
@@ -17,6 +22,7 @@ export const loginValidation = (data) => {
   const schema = Joi.object({
     email: Joi.string().min(6).required().email(),
     password: Joi.string().min(6).required(),
-  });
+  }).prefs({ abortEarly: false, allowUnknown: true, stripUnknown: true });
+
   return schema.validate(data);
 };

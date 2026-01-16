@@ -52,7 +52,7 @@ PORT=5000
 Notes:
 
 - `PORT` is optional (defaults to `5000`).
-- CORS is currently configured in `src/server.js` to allow only `https://bump-2-baby.netlify.app`. Update it to match your frontend URL for local development.
+- CORS is currently configured to allow all origins (see `src/server.js`). If you want to restrict it, update the `cors()` middleware.
 
 ## Running the Server
 
@@ -76,6 +76,8 @@ Once running, the server will respond on:
 
 Base path: `/api/auth`
 
+All request bodies must be JSON.
+
 ### Register
 
 `POST /api/auth/register`
@@ -86,15 +88,24 @@ Request body:
 {
   "name": "Your Name",
   "email": "you@example.com",
-  "password": "yourpassword"
+  "password": "yourpassword",
+  "role": "pregnant",
+  "babyage": "Newborn"
 }
 ```
+
+Notes:
+
+- `babyage` is required for all roles in the current backend.
+- The backend also accepts `babyAge` (camelCase) and normalizes it to `babyage`.
 
 Validation rules (Joi):
 
 - `name`: string, min 3, required
 - `email`: valid email, min 6, required
 - `password`: string, min 6, required
+- `role`: one of `pregnant`, `new_parent`, `caregiver`, required
+- `babyage`: one of `Newborn`, `1mo`, `2mo`, `3mo`, `4mo`, `5mo`, `6mo`, `9mo`, `12mo`, required
 
 Success response (201):
 
@@ -103,6 +114,8 @@ Success response (201):
   "_id": "...",
   "name": "Your Name",
   "email": "you@example.com",
+  "role": "pregnant",
+  "babyage": "Newborn",
   "token": "..."
 }
 ```
@@ -110,6 +123,7 @@ Success response (201):
 Common error responses:
 
 - `400` if validation fails or user already exists
+- `500` if the server encounters an unexpected error
 
 ### Login
 
@@ -138,6 +152,7 @@ Success response (200):
 Common error responses:
 
 - `400` if credentials are invalid or validation fails
+- `500` if the server encounters an unexpected error
 
 ## Example cURL
 
@@ -146,7 +161,7 @@ Register:
 ```bash
 curl -X POST http://localhost:5000/api/auth/register \
 	-H "Content-Type: application/json" \
-	-d "{\"name\":\"Test User\",\"email\":\"test@example.com\",\"password\":\"password123\"}"
+	-d "{\"name\":\"Test User\",\"email\":\"test@example.com\",\"password\":\"password123\",\"role\":\"pregnant\",\"babyage\":\"Newborn\"}"
 ```
 
 Login:
