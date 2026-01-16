@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true }, // don't make it unique
     role: {
-      type: Number,
+      type: String,
       required: true,
       enum: ["pregnant", "new_parent", "caregiver"],
     },
