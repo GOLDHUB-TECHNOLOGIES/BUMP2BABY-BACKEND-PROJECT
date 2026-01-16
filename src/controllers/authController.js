@@ -13,7 +13,7 @@ export const registerUser = async (req, res) => {
     if (error)
       return res.status(400).json({ message: error.details[0].message });
 
-    const { name, email, password, role, babyAgeMonths } = req.body;
+    const { name, email, password, role, babyage } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -27,7 +27,7 @@ export const registerUser = async (req, res) => {
       email,
       password,
       role,
-      babyAgeMonths,
+      babyage,
     });
     // Generate token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -39,6 +39,7 @@ export const registerUser = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      babyage: user.babyage,
       token,
     });
   } catch (error) {
@@ -77,6 +78,7 @@ export const loginUser = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      babyage: user.babyage,
       token,
     });
   } catch (error) {
