@@ -13,7 +13,7 @@ export const registerUser = async (req, res) => {
     if (error)
       return res.status(400).json({ message: error.details[0].message });
 
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, babyAgeMonths } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -22,8 +22,13 @@ export const registerUser = async (req, res) => {
     }
 
     // Create new user
-    const user = await User.create({ name, email, password, role });
-
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role,
+      babyAgeMonths,
+    });
     // Generate token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",

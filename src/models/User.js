@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       enum: ["pregnant", "new_parent", "caregiver"],
     },
+    babyAgeMonths: {
+      type: Number, // e.g. 0 for newborn, 1,2,3...
+      min: 0,
+      max: 60,
+    },
   },
   { timestamps: true }
 );
