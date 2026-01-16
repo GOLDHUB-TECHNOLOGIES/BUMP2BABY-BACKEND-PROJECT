@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 // REGISTER USER
 export const registerUser = async (req, res) => {
   try {
+    // Validate incoming data
     const { error } = registerValidation(req.body);
     if (error)
       return res.status(400).json({ message: error.details[0].message });
@@ -29,6 +30,7 @@ export const registerUser = async (req, res) => {
       role,
       babyAgeMonths,
     });
+
     // Generate token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -55,8 +57,11 @@ export const loginUser = async (req, res) => {
 
     const { email, password } = req.body;
 
-    // Find user
-    const user = await User.findOne({ email });
+    // --- THE FIX IS HERE ---
+    // We added .select('+password') to ensure we actually get the hash from the DB
+    const user = await User.findOne({ email }).select('+password');
+    // -----------------------
+
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
