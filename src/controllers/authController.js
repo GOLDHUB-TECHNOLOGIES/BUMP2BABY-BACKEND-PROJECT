@@ -3,6 +3,7 @@ import {
   loginValidation,
   sendMailValidation,
   verifyUserValidation,
+  forgotPasswordValidation,
 } from "../validation/authValidation.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
