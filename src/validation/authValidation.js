@@ -26,3 +26,20 @@ export const loginValidation = (data) => {
 
   return schema.validate(data);
 };
+
+export const sendMailValidation = (data) => {
+  const schema = Joi.object({
+    email: Joi.string().min(6).required().email(),
+  }).prefs({ abortEarly: false, allowUnknown: true, stripUnknown: true });
+
+  return schema.validate(data);
+};
+
+export const verifyUserValidation = (data) => {
+  const schema = Joi.object({
+    email: Joi.string().min(6).required().email(),
+    code: Joi.string().length(6).required(),
+  }).prefs({ abortEarly: false, allowUnknown: true, stripUnknown: true });
+
+  return schema.validate(data);
+};

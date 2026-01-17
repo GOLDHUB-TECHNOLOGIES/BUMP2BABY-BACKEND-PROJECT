@@ -1,10 +1,13 @@
 import {
   registerValidation,
   loginValidation,
+  sendMailValidation,
+  verifyUserValidation,
 } from "../validation/authValidation.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import generateCode from "../utils/generatecode.js";
 
 // REGISTER USER
 export const registerUser = async (req, res) => {
@@ -60,7 +63,7 @@ export const loginUser = async (req, res) => {
 
     // --- THE FIX IS HERE ---
     // We added .select('+password') to ensure we actually get the hash from the DB
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
     // -----------------------
 
     if (!user) {
@@ -86,6 +89,60 @@ export const loginUser = async (req, res) => {
       babyage: user.babyage,
       token,
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// EMAIL VERIFICATION
+export const verifyEmail = async (req, res) => {
+  try {
+    const { error } = sendMailValidation(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Email already verified" });
+    }
+    code = generateCode(6);
+    user.verificationCode = code;
+    await user.save();
+
+    // Here you would send the code via email using your email service
+    await sendMail({
+      emailTo: user.email,
+      subject: "Email Verification Code",
+      code,
+      content: "verify your email",
+    });
+    res.status(200).json({ message: "Verification code sent to email" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Verify User
+export const verifyUser = async (req, res) => {
+  try {
+    const { error } = verifyUserValidation(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+    const { email, code } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    if (user.verificationCode !== code) {
+      return res.status(400).json({ message: "Invalid verification code" });
+    }
+    user.isVerified = true;
+    user.verificationCode = null;
+    await user.save();
+    res.status(200).json({ message: "Email verified successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -26,8 +26,11 @@ const userSchema = new mongoose.Schema(
         "12mo",
       ],
     },
+    verificationCode: String,
+    forgetPasswordCode: String,
+    isVerified: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Hash password before saving
