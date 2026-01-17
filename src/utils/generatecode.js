@@ -8,4 +8,4 @@ const generateCode = (codeLength = 6) => {
   return code;
 };
 
-module.exports = generateCode;
+export default generateCode;
