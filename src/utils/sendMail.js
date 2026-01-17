@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 const { Email_User, Email_Pass } = process.env;
 
-export const sendMail = async ({ emailTo, subject, code, content }) => {
+const sendMail = async ({ emailTo, subject, code, content }) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.virgilian.com",
     port: 587,
@@ -23,3 +23,5 @@ export const sendMail = async ({ emailTo, subject, code, content }) => {
   };
   await transporter.sendMail(message);
 };
+
+export default sendMail;
