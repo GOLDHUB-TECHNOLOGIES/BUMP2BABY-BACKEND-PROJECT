@@ -1,184 +1,114 @@
 # Bump2Baby Backend
 
-Node.js/Express backend for the Bump2Baby application. This service provides authentication (register/login) backed by MongoDB, with request validation via Joi and JWT-based tokens.
+A secure and scalable backend API for the Bump2Baby application, built with Node.js, Express, and MongoDB.
 
-## Tech Stack
+## 📋 Overview
 
-- Node.js + Express
-- MongoDB + Mongoose
-- Auth: JWT (`jsonwebtoken`)
-- Password hashing: `bcryptjs`
-- Validation: `joi`
-- CORS: `cors`
+This backend service provides authentication and user management functionality for the Bump2Baby platform. It implements JWT-based authentication, input validation, and secure password handling.
 
-## Project Structure
+## 🚀 Features
 
+- **User Authentication**: Secure registration and login with JWT tokens
+- **Password Security**: Password hashing using bcrypt
+- **Input Validation**: Request validation using Joi
+- **MongoDB Integration**: Database persistence with Mongoose ODM
+- **CORS Support**: Cross-origin resource sharing enabled
+- **Environment Configuration**: Secure configuration using environment variables
+
+## 🛠️ Tech Stack
+
+- **Runtime**: Node.js
+- **Framework**: Express.js 5.x
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT (JSON Web Tokens)
+- **Validation**: Joi
+- **Security**: bcrypt for password hashing
+
+## 📦 Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd BUMP2BABY-BACKEND-PROJECT
 ```
-src/
-	server.js              # Express app entry
-	config/
-		db.js                # MongoDB connection
-	controllers/
-		authController.js    # Register/login handlers
-	models/
-		User.js              # User schema + password hashing
-	routes/
-		authRoutes.js        # /api/auth routes
-	validation/
-		authValidation.js    # Joi schemas
-```
 
-## Prerequisites
-
-- Node.js (recommended: LTS)
-- A MongoDB connection string (local or Atlas)
-
-## Setup
-
-1. Install dependencies:
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. Create a `.env` file in the project root:
+3. Create a `.env` file in the root directory:
 
 ```env
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
 PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+NODE_ENV=development
 ```
 
-Notes:
-
-- `PORT` is optional (defaults to `5000`).
-- CORS is currently configured to allow all origins (see `src/server.js`). If you want to restrict it, update the `cors()` middleware.
-
-## Running the Server
-
-- Development (auto-restart):
+4. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-- Production:
+Or for production:
 
 ```bash
 npm start
 ```
 
-Once running, the server will respond on:
+## 📁 Project Structure
 
-- `GET /` → `Backend running successfully`
-
-## API
-
-Base path: `/api/auth`
-
-All request bodies must be JSON.
-
-### Register
-
-`POST /api/auth/register`
-
-Request body:
-
-```json
-{
-  "name": "Your Name",
-  "email": "you@example.com",
-  "password": "yourpassword",
-  "role": "pregnant",
-  "babyage": "Newborn"
-}
+```
+src/
+├── server.js              # Application entry point
+├── config/
+│   └── db.js             # Database configuration
+├── controllers/
+│   └── authController.js # Authentication logic
+├── models/
+│   └── User.js           # User data model
+├── routes/
+│   └── authRoutes.js     # Authentication endpoints
+└── validation/
+    └── authValidation.js # Request validation schemas
 ```
 
-Notes:
+## 🔌 API Endpoints
 
-- `babyage` is required for all roles in the current backend.
-- The backend also accepts `babyAge` (camelCase) and normalizes it to `babyage`.
+### Authentication
 
-Validation rules (Joi):
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login user and receive JWT token
 
-- `name`: string, min 3, required
-- `email`: valid email, min 6, required
-- `password`: string, min 6, required
-- `role`: one of `pregnant`, `new_parent`, `caregiver`, required
-- `babyage`: one of `Newborn`, `1mo`, `2mo`, `3mo`, `4mo`, `5mo`, `6mo`, `9mo`, `12mo`, required
+## 🔐 Environment Variables
 
-Success response (201):
+| Variable      | Description                          | Required |
+| ------------- | ------------------------------------ | -------- |
+| `PORT`        | Server port number                   | Yes      |
+| `MONGODB_URI` | MongoDB connection string            | Yes      |
+| `JWT_SECRET`  | Secret key for JWT signing           | Yes      |
+| `NODE_ENV`    | Environment (development/production) | No       |
 
-```json
-{
-  "_id": "...",
-  "name": "Your Name",
-  "email": "you@example.com",
-  "role": "pregnant",
-  "babyage": "Newborn",
-  "token": "..."
-}
-```
+## 🧪 Development
 
-Common error responses:
-
-- `400` if validation fails or user already exists
-- `500` if the server encounters an unexpected error
-
-### Login
-
-`POST /api/auth/login`
-
-Request body:
-
-```json
-{
-  "email": "you@example.com",
-  "password": "yourpassword"
-}
-```
-
-Success response (200):
-
-```json
-{
-  "_id": "...",
-  "name": "Your Name",
-  "email": "you@example.com",
-  "token": "..."
-}
-```
-
-Common error responses:
-
-- `400` if credentials are invalid or validation fails
-- `500` if the server encounters an unexpected error
-
-## Example cURL
-
-Register:
+The project uses nodemon for development with hot-reloading:
 
 ```bash
-curl -X POST http://localhost:5000/api/auth/register \
-	-H "Content-Type: application/json" \
-	-d "{\"name\":\"Test User\",\"email\":\"test@example.com\",\"password\":\"password123\",\"role\":\"pregnant\",\"babyage\":\"Newborn\"}"
+npm run dev
 ```
 
-Login:
+## 📝 License
 
-```bash
-curl -X POST http://localhost:5000/api/auth/login \
-	-H "Content-Type: application/json" \
-	-d "{\"email\":\"test@example.com\",\"password\":\"password123\"}"
-```
+ISC
 
-## Environment Variables
+## 👥 Contributing
 
-- `MONGO_URI` (required): MongoDB connection string
-- `JWT_SECRET` (required): secret used to sign JWTs
-- `PORT` (optional): server port (default `5000`)
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Notes
+---
 
-- Passwords are hashed automatically via a Mongoose `pre('save')` hook in `src/models/User.js`.
-- JWT tokens are issued with an expiry of `7d`.
+Built with ❤️ for Bump2Baby
