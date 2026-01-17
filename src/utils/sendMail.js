@@ -3,7 +3,7 @@ const { Email_User, Email_Pass } = process.env;
 
 const sendMail = async ({ emailTo, subject, code, content }) => {
   const transporter = nodemailer.createTransport({
-    host: "smtp.virgilian.com",
+    host: "in.mail.tm",
     port: 587,
     secure: false,
     auth: {
