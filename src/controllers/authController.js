@@ -8,6 +8,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import generateCode from "../utils/generatecode.js";
+import sendMail from "../utils/sendMail.js";
 
 // REGISTER USER
 export const registerUser = async (req, res) => {
