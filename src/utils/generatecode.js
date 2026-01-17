@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+import crypto from "crypto";
 
 const generateCode = (codeLength = 6) => {
   let code = "";
