@@ -108,7 +108,7 @@ export const verifyEmail = async (req, res) => {
     if (user.isVerified) {
       return res.status(400).json({ message: "Email already verified" });
     }
-    code = generateCode(6);
+    const code = generateCode(6);
     user.verificationCode = code;
     await user.save();
 
