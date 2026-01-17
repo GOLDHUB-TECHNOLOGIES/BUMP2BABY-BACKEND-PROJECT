@@ -1,28 +1,6 @@
 import FormData from "form-data"; // form-data v4.0.1
 import Mailgun from "mailgun.js"; // mailgun.js v11.1.0
 
-// async function sendSimpleMessage() {
-//   const mailgun = new Mailgun(FormData);
-//   const mg = mailgun.client({
-//     username: "api",
-//     key: process.env.MAIL_APIKEY,
-//     // When you have an EU-domain, you must specify the endpoint:
-//     // url: "https://api.eu.mailgun.net"
-//   });
-//   try {
-//     const data = await mg.messages.create("sandboxd6cbf348e90e478aa9afa2d5884a340d.mailgun.org", {
-//       from: "Mailgun Sandbox <postmaster@sandboxd6cbf348e90e478aa9afa2d5884a340d.mailgun.org>",
-//       to: ["Justin <justinphones74@gmail.com>"],
-//       subject: "Hello Justin",
-//       text: "Congratulations Justin, you just sent an email with Mailgun! You are truly awesome!",
-//     });
-
-//     console.log(data); // logs response data
-//   } catch (error) {
-//     console.log(error); //logs any error
-//   }
-// }
-
 // ...existing code...
 
 const mailgun = new Mailgun(FormData);
@@ -43,13 +21,23 @@ const sendMail = async ({ emailTo, subject, code, content }) => {
   if (!emailTo) throw new Error("emailTo is required");
   if (!subject) throw new Error("subject is required");
 
-  const from = process.env.MAIL_FROM || `bump2baby <postmaster@${domain}>`; // or a verified sender you configured in Mailgun
+  const from = process.env.MAIL_FROM || `Bump2Baby <postmaster@${domain}>`; // or a verified sender you configured in Mailgun
 
   const html = `
-    <div>
-      <h3>Use this below code to ${content}</h3>
-      <p>Your verification code is: ${code}</p>
+    <div style="font-family: Arial, sans-serif; background:#f6f7fb; padding:24px;">
+    <div style="max-width:560px; margin:0 auto; background:#fff; border-radius:12px; padding:24px; border:1px solid #e9e9ef;">
+      <h2 style="margin:0 0 12px; color:#111827;">Bump2Baby</h2>
+      <p style="margin:0 0 16px; color:#374151;">
+        Use the code below to ${content}.
+      </p>
+      <div style="font-size:28px; letter-spacing:6px; font-weight:700; padding:14px 16px; background:#f3f4f6; border-radius:10px; text-align:center;">
+        ${code}
+      </div>
+      <p style="margin:16px 0 0; color:#6b7280; font-size:12px;">
+        If you didn’t request this, you can ignore this email.
+      </p>
     </div>
+  </div>
   `;
 
   await mg.messages.create(domain, {

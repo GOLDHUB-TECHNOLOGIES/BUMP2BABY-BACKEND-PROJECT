@@ -43,3 +43,13 @@ export const verifyUserValidation = (data) => {
 
   return schema.validate(data);
 };
+
+export const forgotPasswordValidation = (data) => {
+  const schema = Joi.object({
+    email: Joi.string().min(6).required().email(),
+    code: Joi.string().length(6).required(),
+    password: Joi.string().min(6).required(),
+  }).prefs({ abortEarly: false, allowUnknown: true, stripUnknown: true });
+
+  return schema.validate(data);
+};

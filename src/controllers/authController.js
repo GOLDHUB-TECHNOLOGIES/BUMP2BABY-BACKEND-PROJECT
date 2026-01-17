@@ -148,3 +148,54 @@ export const verifyUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// Forgot password code
+export const forgotPasswordCode = async (req, res) => {
+  try {
+    const { error } = sendMailValidation(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const code = generateCode(6);
+    user.forgotPasswordCode = code;
+    await user.save();
+
+    await sendMail({
+      emailTo: user.email,
+      subject: "Forgotten password reset code",
+      code,
+      content: "change your password",
+    });
+    res.status(200).json({ message: "Forgot password code sent successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+// recover password
+export const recoverPassword = async (req, res) => {
+  try {
+    // Validate incoming data
+    const { error } = forgotPasswordValidation(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+    // Implementation for password recovery goes here
+    const { email, code, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    if (user.forgotPasswordCode !== code) {
+      return res.status(400).json({ message: "Invalid password reset code" });
+    }
+    user.password = password;
+    user.forgotPasswordCode = null;
+    await user.save();
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
