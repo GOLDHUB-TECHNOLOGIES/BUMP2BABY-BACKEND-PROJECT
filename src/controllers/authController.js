@@ -286,7 +286,6 @@ export const updateProfile = async (req, res) => {
       email: user.email,
       role: user.role,
       trimesters: user.trimesters,
-      token,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
