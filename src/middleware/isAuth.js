@@ -11,10 +11,10 @@ export const isAuth = async (req, res, next) => {
       if (payload) {
         req.user = {
           _id: payload._id,
-          name: payload._name,
-          email: payload._email,
-          role: payload._role,
-          babyage: payload._babyage,
+          name: payload.name,
+          email: payload.email,
+          role: payload.role,
+          babyage: payload.babyage,
         };
         next();
       } else {
