@@ -53,3 +53,21 @@ export const forgotPasswordValidation = (data) => {
 
   return schema.validate(data);
 };
+
+export const changePasswordValidation = (data) => {
+  const schema = Joi.object({
+    oldPassword: Joi.string().min(6).required(),
+    newPassword: Joi.string().min(6).required(),
+  }).prefs({ abortEarly: false, allowUnknown: true, stripUnknown: true });
+
+  return schema.validate(data);
+};
+
+export const updateProfileValidation = (data) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3),
+    email: Joi.string().min(6).email(),
+  }).prefs({ abortEarly: false, allowUnknown: true, stripUnknown: true });
+
+  return schema.validate(data);
+};

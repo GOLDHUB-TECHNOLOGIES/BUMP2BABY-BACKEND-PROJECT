@@ -200,3 +200,65 @@ export const recoverPassword = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const changePassword = async (req, res) => {
+  try {
+    const { error } = changePasswordValidation(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+    const { oldPassword, newPassword } = req.body;
+    const { _id } = req.user;
+    const user = await User.findById(_id);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+    }
+    const match = await bcrypt.compare(oldPassword, user.password);
+    if (!match) {
+      res.status(400).json({ message: "Old password is incorrect" });
+    }
+    if (oldPassword === newPassword) {
+      res
+        .status(400)
+        .json({ message: "New password must be different from old password" });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { error } = updateProfileValidation(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+    const { _id } = req.user;
+    const { name, email } = req.body;
+    const user = await User.findById(_id);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+    }
+    if (email) {
+      const isEmailTaken = await User.findOne({ email });
+      if (
+        isEmailTaken &&
+        isEmailTaken.email === email &&
+        String(user._id) !== String(isEmailTaken._id)
+      ) {
+        res.status(400).json({ message: "Email is already taken" });
+      }
+    }
+    user.name = name ? name : user.name;
+    user.email = email ? email : user.email;
+
+    if (email) {
+      user.isVerified = false;
+    }
+    await user.save();
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
