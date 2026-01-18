@@ -3,15 +3,18 @@ import Joi from "joi";
 export const registerValidation = (data) => {
   const schema = Joi.object({
     role: Joi.string().valid("pregnant", "new_parent", "caregiver").required(),
-    babyage: Joi.string()
-      .valid("Newborn", "1mo", "2mo", "3mo", "4mo", "5mo", "6mo", "9mo", "12mo")
+    trimesters: Joi.string()
+      .valid("1-13weeks", "14-27weeks", "28-40weeks")
       .required(),
     name: Joi.string().min(3).required(),
     email: Joi.string().min(6).required().email(),
     password: Joi.string().min(6).required(),
   })
-    // Allow clients to send either babyAge or babyage
-    .rename("babyAge", "babyage", { override: true, ignoreUndefined: true })
+    // Allow clients to send either trimesters or trimesters
+    .rename("trimesters", "Trimesters", {
+      override: true,
+      ignoreUndefined: true,
+    })
     // Prevent failures if clients send extra keys; strip them from the value
     .prefs({ abortEarly: false, allowUnknown: true, stripUnknown: true });
 

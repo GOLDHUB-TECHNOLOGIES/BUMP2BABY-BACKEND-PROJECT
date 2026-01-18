@@ -11,20 +11,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       enum: ["pregnant", "new_parent", "caregiver"],
     },
-    babyage: {
+    trimesters: {
       type: String,
       required: true,
-      enum: [
-        "Newborn",
-        "1mo",
-        "2mo",
-        "3mo",
-        "4mo",
-        "5mo",
-        "6mo",
-        "9mo",
-        "12mo",
-      ],
+      enum: ["1-13weeks", " 14-27weeks", "28-40weeks"],
     },
     verificationCode: String,
     forgotPasswordCode: String,

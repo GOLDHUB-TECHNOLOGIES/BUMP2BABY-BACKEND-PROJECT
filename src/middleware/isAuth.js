@@ -14,7 +14,7 @@ export const isAuth = async (req, res, next) => {
           name: payload.name,
           email: payload.email,
           role: payload.role,
-          babyage: payload.babyage,
+          trimesters: payload.trimesters,
         };
         next();
       } else {

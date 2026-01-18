@@ -21,7 +21,7 @@ export const registerUser = async (req, res) => {
     if (error)
       return res.status(400).json({ message: error.details[0].message });
 
-    const { name, email, password, role, babyage } = req.body;
+    const { name, email, password, role, trimesters } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -35,7 +35,7 @@ export const registerUser = async (req, res) => {
       email,
       password,
       role,
-      babyage,
+      trimesters,
     });
 
     // Generate token
@@ -45,7 +45,7 @@ export const registerUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        babyage: user.babyage,
+        trimesters: user.trimesters,
       },
       process.env.JWT_SECRET,
       {
@@ -58,7 +58,7 @@ export const registerUser = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      babyage: user.babyage,
+      trimesters: user.trimesters,
       token,
     });
   } catch (error) {
@@ -97,7 +97,7 @@ export const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        babyage: user.babyage,
+        trimesters: user.trimesters,
       },
       process.env.JWT_SECRET,
       {
@@ -105,12 +105,12 @@ export const loginUser = async (req, res) => {
       },
     );
 
-    res.json({
+    res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-      babyage: user.babyage,
+      trimesters: user.trimesters,
       token,
     });
   } catch (error) {
@@ -279,7 +279,15 @@ export const updateProfile = async (req, res) => {
       user.isVerified = false;
     }
     await user.save();
-    res.status(200).json({ message: "Profile updated successfully" });
+    res.status(200).json({
+      message: "Profile updated successfully",
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      trimesters: user.trimesters,
+      token,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
