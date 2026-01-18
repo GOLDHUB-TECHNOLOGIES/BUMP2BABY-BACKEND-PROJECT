@@ -11,7 +11,7 @@ export const registerValidation = (data) => {
     password: Joi.string().min(6).required(),
   })
     // Allow clients to send either trimesters or trimesters
-    .rename("trimesters", "Trimesters", {
+    .rename("Trimesters", "trimesters", {
       override: true,
       ignoreUndefined: true,
     })
