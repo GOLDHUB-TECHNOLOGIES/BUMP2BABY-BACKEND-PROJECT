@@ -4,6 +4,8 @@ import {
   sendMailValidation,
   verifyUserValidation,
   forgotPasswordValidation,
+  changePasswordValidation,
+  updateProfileValidation,
 } from "../validation/authValidation.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
