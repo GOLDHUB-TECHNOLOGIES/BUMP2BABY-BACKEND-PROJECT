@@ -57,14 +57,16 @@ export const registerUser = async (req, res) => {
       status: "success",
       message: "User registered successfully",
       data: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        trimesters: user.trimesters,
-        isVerified: user.isVerified,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          trimesters: user.trimesters,
+          isVerified: user.isVerified,
+        },
+        token,
       },
-      token,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -114,14 +116,16 @@ export const loginUser = async (req, res) => {
       status: "success",
       message: "User logged in successfully",
       data: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        trimesters: user.trimesters,
-        isVerified: user.isVerified,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          trimesters: user.trimesters,
+          isVerified: user.isVerified,
+        },
+        token,
       },
-      token,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -304,12 +308,14 @@ export const updateProfile = async (req, res) => {
       status: "success",
       message: "Profile updated successfully",
       data: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        trimesters: user.trimesters,
-        isVerified: user.isVerified,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          trimesters: user.trimesters,
+          isVerified: user.isVerified,
+        },
       },
     });
   } catch (error) {
