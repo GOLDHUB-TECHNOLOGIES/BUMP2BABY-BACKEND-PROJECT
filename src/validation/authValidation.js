@@ -3,9 +3,16 @@ import Joi from "joi";
 export const registerValidation = (data) => {
   const schema = Joi.object({
     role: Joi.string().valid("pregnant", "new_parent", "caregiver").required(),
-    trimesters: Joi.string()
-      .valid("1-13weeks", "14-27weeks", "28-40weeks")
-      .required(),
+    trimesters: Joi.when("role", {
+      is: "pregnant",
+      then: Joi.string()
+        .valid("1-13weeks", "14-27weeks", "28-40weeks")
+        .required(),
+      otherwise: Joi.string()
+        .valid("1-13weeks", "14-27weeks", "28-40weeks")
+        .optional()
+        .allow(null, ""),
+    }),
     name: Joi.string().min(3).required(),
     email: Joi.string().min(6).required().email(),
     password: Joi.string().min(6).required(),
