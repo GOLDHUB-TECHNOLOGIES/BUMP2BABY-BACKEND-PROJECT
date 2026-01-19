@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
     },
     trimesters: {
       type: String,
-      enum: ["1-13weeks", " 14-27weeks", "28-40weeks"],
+      enum: ["1-13weeks", "14-27weeks", "28-40weeks"],
     },
     verificationCode: String,
     forgotPasswordCode: String,

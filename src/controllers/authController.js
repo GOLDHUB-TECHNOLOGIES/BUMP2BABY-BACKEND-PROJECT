@@ -54,11 +54,16 @@ export const registerUser = async (req, res) => {
     );
 
     res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      trimesters: user.trimesters,
+      status: "success",
+      message: "User registered successfully",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        trimesters: user.trimesters,
+        isVerified: user.isVerified,
+      },
       token,
     });
   } catch (error) {
@@ -106,11 +111,16 @@ export const loginUser = async (req, res) => {
     );
 
     res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      trimesters: user.trimesters,
+      status: "success",
+      message: "User logged in successfully",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        trimesters: user.trimesters,
+        isVerified: user.isVerified,
+      },
       token,
     });
   } catch (error) {
@@ -143,7 +153,9 @@ export const verifyEmail = async (req, res) => {
       code,
       content: "verify your email",
     });
-    res.status(200).json({ message: "Verification code sent to email" });
+    res
+      .status(200)
+      .json({ status: "success", message: "Verification code sent to email" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -166,7 +178,9 @@ export const verifyUser = async (req, res) => {
     user.isVerified = true;
     user.verificationCode = null;
     await user.save();
-    res.status(200).json({ message: "Email verified successfully" });
+    res
+      .status(200)
+      .json({ status: "success", message: "Email verified successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -193,7 +207,10 @@ export const forgotPasswordCode = async (req, res) => {
       code,
       content: "change your password",
     });
-    res.status(200).json({ message: "Forgot password code sent successfully" });
+    res.status(200).json({
+      status: "success",
+      message: "Forgot password code sent successfully",
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -217,7 +234,9 @@ export const recoverPassword = async (req, res) => {
     user.password = password;
     user.forgotPasswordCode = null;
     await user.save();
-    res.status(200).json({ message: "Password reset successfully" });
+    res
+      .status(200)
+      .json({ status: "success", message: "Password reset successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -245,7 +264,9 @@ export const changePassword = async (req, res) => {
     }
     user.password = newPassword;
     await user.save();
-    res.status(200).json({ message: "Password changed successfully" });
+    res
+      .status(200)
+      .json({ status: "success", message: "Password changed successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -280,12 +301,16 @@ export const updateProfile = async (req, res) => {
     }
     await user.save();
     res.status(200).json({
+      status: "success",
       message: "Profile updated successfully",
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      trimesters: user.trimesters,
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        trimesters: user.trimesters,
+        isVerified: user.isVerified,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
