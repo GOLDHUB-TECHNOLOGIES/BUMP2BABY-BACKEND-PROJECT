@@ -40,12 +40,22 @@ const sendMail = async ({ emailTo, subject, code, content }) => {
   </div>
   `;
 
-  await mg.messages.create(domain, {
-    from,
-    to: [emailTo],
-    subject,
-    html,
-  });
+  try {
+    await mg.messages.create(domain, {
+      from,
+      to: [emailTo],
+      subject,
+      html,
+    });
+  } catch (error) {
+    console.error("Mailgun Error:", error);
+    if (error.status === 403 || error.status === 401) {
+      throw new Error(
+        "Email service forbidden: Check your MAILGUN_DOMAIN and MAIL_APIKEY.",
+      );
+    }
+    throw new Error(`Email service failed: ${error.message}`);
+  }
 };
 
 export default sendMail;

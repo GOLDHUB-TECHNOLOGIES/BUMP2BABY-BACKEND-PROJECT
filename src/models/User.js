@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["pregnant", "new_parent", "caregiver"],
+      enum: ["pregnant", "new_parent", "caregiver", "admin", "moderator"],
     },
     trimesters: {
       type: String,
